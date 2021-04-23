@@ -11,17 +11,19 @@ let numbers = document.getElementsByClassName('number');
 
 function chooseOperator() {
   for (let i = 0; i < operators.length; i++ ) {
-    operators[i].addEventListener('click', function() {
+    operators[i].addEventListener('click', function(e) {
       if (this.id === 'AC') {
         console.log(this.id);
         setHistory('');
         setOutput('');
       } else if (this.id === 'backspace') {
-        let output = reverseNumberFormat(getOutput()).toString();
-        if (output) {
-          output = output.substr(0,output.length - 1);
-          setOutput(output)
+        let history = reverseNumberFormat(getHistory()).toString();
+        // reverseNumberFormat(getHistory()).toString();
+        if (history) {
+          history = history.substr(0,history.length - 1);
+          setHistory(history);
         }
+      } else if (this.id ==='.') {  
         
       //  else if ( this.id ==='.') {
       //   let output = getOutput();
@@ -37,25 +39,46 @@ function chooseOperator() {
         
       // } else if ( this.id ==='()') {
       //   console.log('click');
-      } else {
+      }
+       else {
         let output = getOutput();
         let history = getHistory();
-        if (output === '' && history !== '') {
+
+        // check if 5 + 6 + the last +
+        if (output !== '' && history === '') {
           if (isNaN(history[history.length - 1])) {
             history = history.substr(0, history.length - 1);
+            console.log("0");
           }
         }
-        if (output !== '' || history !== '') {
-          output = (output === '') ? output : reverseNumberFormat(output);
-          history += output;
+        if (history !== '' || output !== '') {
+          
+          history = (history === '') ? history : reverseNumberFormat(getHistory());
+          console.log(this.id);
+          history += this.id;
+          console.log(history.includes());
+          let flag = checkOperator(history);
+          console.log(flag);
+          let result = eval(tmp.toString());
+          setOutput(result);
           if (this.id === '=') {
-            let result = eval(history);
+            // let result = eval(history);
+            let hist = document.getElementById('history-value');
+            console.log(hist.classList.toggle('history'));
+            let out = document.getElementById('output-value');
+            console.log(out.classList.toggle('output'));
             setOutput(result);
-            setHistory('');
+
+            // setOutput('');
           } else {
+            let tmp = history;
+            console.log(tmp);
             history += this.id;
-            setHistory(history);
-            setOutput('');
+            history = reverseNumberFormat(getHistory());
+            console.log(tmp);
+            // history = getFormattedNumber(getHistory())
+            setHistory(tmp);
+            // setHistory('');
           }
           
         }
@@ -67,37 +90,44 @@ function chooseOperator() {
 function chooseNumber() {
   for (let i = 0; i < numbers.length; i++ ) {
     numbers[i].addEventListener('click', function() {
-        let output = reverseNumberFormat(getOutput());
-        if (output !== NaN) {
-          output += this.id;
-          setOutput(output);
+        let history = reverseNumberFormat(getHistory());
+        if (history !== NaN) {
+          history += this.id;
+          setHistory(history);
         } 
-        console.log(numbers[i].innerText);
+        // let history = getHistory()
+        // history += this.id;
+        // setHistory(history);
+        // console.log(isNaN(history));
     }); 
   }   
 }
-
+function checkOperator(op) {
+  let len = op.length;
+  if (op.includes('+') || op.includes('-') || op.includes('*') || op.includes('/') || op.includes('%')) {
+    let index = op.indexof
+  }
+}
 
 function getHistory() {
-  return document.getElementById('history-value').innerText;
+  return document.getElementById('history-value').innerHTML;
 }
 
 function setHistory(num) {
-  document.getElementById('history-value').innerText = num;
+  if (num === '') {
+    document.getElementById('history-value').innerHTML = num;
+  } 
+  else {
+    document.getElementById('history-value').innerHTML = getFormattedNumber(num);
+  }
 }
 
 function getOutput() {
-  return document.getElementById('output-value').innerText;
+  return document.getElementById('output-value').innerHTML;
 }
 
 function setOutput(num) {
-  if (num === '') {
-    document.getElementById('output-value').innerText = num;
-  } 
-  else {
-    document.getElementById('output-value').innerText = getFormattedNumber(num);
-  }
-  
+  document.getElementById('output-value').innerHTML = num;
 }
 
 function getFormattedNumber(num) {
