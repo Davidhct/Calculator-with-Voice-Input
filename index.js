@@ -1,5 +1,7 @@
 
-
+let subFlag = true;
+let equalFlag = true;
+let checkFlag = false;
 onload = function run() {
   chooseOperator()
   chooseNumber()
@@ -12,101 +14,149 @@ let numbers = document.getElementsByClassName('number');
 function chooseOperator() {
   for (let i = 0; i < operators.length; i++ ) {
     operators[i].addEventListener('click', function(e) {
+      let history = getHistory(); 
+      let output = getOutput();
       if (this.id === 'AC') {
         console.log(this.id);
         setHistory('');
         setOutput('');
+        subFlag = true;
       } else if (this.id === 'backspace') {
-        let history = reverseNumberFormat(getHistory()).toString();
-        // reverseNumberFormat(getHistory()).toString();
-        if (history) {
-          history = history.substr(0,history.length - 1);
+        if (equalFlag === false) {
+          setHistory('');
+          history = getHistory();
+          history = history.concat(output);
           setHistory(history);
         }
-      } else if (this.id ==='.') {  
-        
-      //  else if ( this.id ==='.') {
-      //   let output = getOutput();
-      //   console.log(typeof output);
-      //   let history = getHistory();
-      //   if (output === '') {
-      //     output = '0.';
-      //   }
-      //     output = output + this.id;
-          
-      //     console.log(output);
-      //     setOutput(output);
-        
-      // } else if ( this.id ==='()') {
-      //   console.log('click');
-      }
-       else {
-        let output = getOutput();
-        let history = getHistory();
+        else if (history) {
+          history = history.substr(0,history.length - 1);
+          setHistory(history);
 
-        // check if 5 + 6 + the last +
-        if (output !== '' && history === '') {
-          if (isNaN(history[history.length - 1])) {
+          if (!isNaN(history[history.length - 1])) {
+            let tmp = history;
+            tmp  = checkOperator(tmp);
+            if (checkFlag) {
+              output = eval(tmp);
+              setOutput(output);
+              checkFlag = false;
+            } else {
+              output = eval(history);
+              setHistory(history);
+              setOutput(output);
+            }
+            
+          }
+        } 
+        if (isNaN(history[history.length - 1])) {
+          let tmp = history;
+          tmp = tmp.substr(0,tmp.length - 1);
+          tmp  = checkOperator(tmp);
+          output = eval(tmp);
+          setHistory(history);
+          setOutput(output);
+        }
+        if (history === '') {
+          setOutput('');
+          subFlag = true;
+        }
+      }else if (history === '') {
+  
+        if (this.id === '-' && subFlag === true) {
+          history = history.concat(this.id);
+          setHistory(history);
+          subFlag = false;
+        } 
+        else if (this.id === '.') {
+          history = history.concat('0.');
+          setHistory(history);
+        }
+      } 
+      else {
+        if (isNaN(history[history.length - 1])) {
             history = history.substr(0, history.length - 1);
             console.log("0");
           }
-        }
-        if (history !== '' || output !== '') {
-          
-          history = (history === '') ? history : reverseNumberFormat(getHistory());
-          console.log(this.id);
-          history += this.id;
-          console.log(history.includes());
-          let flag = checkOperator(history);
-          console.log(flag);
-          let result = eval(tmp.toString());
-          setOutput(result);
-          if (this.id === '=') {
-            // let result = eval(history);
+        if (history !== '') {
+          if (this.id === '=' && equalFlag === true) {
             let hist = document.getElementById('history-value');
-            console.log(hist.classList.toggle('history'));
+            hist.classList.toggle('history');
             let out = document.getElementById('output-value');
-            console.log(out.classList.toggle('output'));
-            setOutput(result);
+            out.classList.toggle('output');
+            equalFlag = false;
 
-            // setOutput('');
-          } else {
-            let tmp = history;
-            console.log(tmp);
-            history += this.id;
-            history = reverseNumberFormat(getHistory());
-            console.log(tmp);
-            // history = getFormattedNumber(getHistory())
-            setHistory(tmp);
-            // setHistory('');
+          } 
+          if (this.id !== '=') {
+            if (equalFlag === false) {
+              let hist = document.getElementById('history-value');
+              hist.classList.toggle('history');
+              let out = document.getElementById('output-value');
+              out.classList.toggle('output');
+              
+              
+              setHistory('');
+              history = getHistory();
+              history = history.concat(output);
+              setHistory(history);
+              
+
+              equalFlag = true;
+            }
+            
+            if (this.id === '/') {
+              history = history.concat(this.innerHTML);
+              setHistory(history);
+            } else if (this.id === '*') {
+              history = history.concat(this.innerHTML);
+              setHistory(history);
+            } else {
+              history = history.concat(this.id);
+              setHistory(history);
+            } 
           }
-          
         }
-      }
-        console.log(operators[i].innerText);
+      } 
     }); 
   }   
 }
 function chooseNumber() {
   for (let i = 0; i < numbers.length; i++ ) {
     numbers[i].addEventListener('click', function() {
-        let history = reverseNumberFormat(getHistory());
-        if (history !== NaN) {
-          history += this.id;
-          setHistory(history);
-        } 
-        // let history = getHistory()
-        // history += this.id;
-        // setHistory(history);
-        // console.log(isNaN(history));
+      let history = getHistory();
+      let output = getOutput();
+
+      history  = history.concat(this.id);
+      let tmp = history;
+      tmp  = checkOperator(tmp);
+          
+      if (checkFlag) {
+        output = eval(tmp);
+        setHistory(history);
+        setOutput(output);
+        checkFlag = false;
+      } else {
+        output = eval(history);
+        setHistory(history);
+        setOutput(output);
+      }
     }); 
   }   
 }
-function checkOperator(op) {
-  let len = op.length;
-  if (op.includes('+') || op.includes('-') || op.includes('*') || op.includes('/') || op.includes('%')) {
-    let index = op.indexof
-  }
+function checkOperator(tmp) {
+  let divide = document.getElementById('/');
+  let mult = document.getElementById('*');
+
+  for (let i = 0; i < tmp.length; i++) {
+    if (tmp[i] === divide.innerHTML) {
+      tmp = tmp.replace(divide.innerHTML, '/');
+      checkFlag = true;
+    }
+    if (tmp[i] === mult.innerHTML) {
+      tmp = tmp.replace(mult.innerHTML, '*');
+      checkFlag = true;
+      }
+    }
+  return tmp;
+  
 }
 
 function getHistory() {
@@ -118,7 +168,7 @@ function setHistory(num) {
     document.getElementById('history-value').innerHTML = num;
   } 
   else {
-    document.getElementById('history-value').innerHTML = getFormattedNumber(num);
+    document.getElementById('history-value').innerHTML = num;
   }
 }
 
