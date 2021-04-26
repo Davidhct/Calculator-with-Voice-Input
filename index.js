@@ -1,10 +1,10 @@
-
 let subFlag = true;
 let equalFlag = true;
 let checkFlag = false;
 onload = function run() {
-  chooseOperator()
-  chooseNumber()
+  chooseOperator();
+  chooseNumber();
+  microphone();
 }
 
 let operators = document.getElementsByClassName('operator');
@@ -195,3 +195,76 @@ function reverseNumberFormat(num) {
 }
 
 
+function microphone() {
+  let mic = document.getElementById('microphone');
+
+  mic.addEventListener('click', function() {
+    mic.classList.add('record');
+    let recognition = new (window.SpeechRecognition || 
+      window.webkitSpeechRecognition || window.mozSpeechRecognition ||
+      window.msSpeechRecognitin) ();
+      recognition.lang = 'en-US';
+      recognition.start();
+      operations = {
+        'plus': '+',
+        'minus': '-',
+        'multiply': '*',
+        'multiplied': '*',
+        'divide': '/',
+        'divided': '/',
+        'reminder': '%'
+      }
+      recognition.onresult = function(e) {
+        let input = e.results[0][0].transcript;
+
+        for (prop in operations) 
+          input = input.replace(prop, operations[prop]);
+
+        // setHistory(input);
+        setTimeout(function() {
+          evaluate(input);
+        }, 2000);
+        mic.classList.remove('record');
+      }
+  });
+}
+
+function evaluate(input) {
+
+  try {
+    let tmp = checkVoiceInput(input);
+    console.log(tmp);
+    setHistory(tmp)
+    tmp = checkOperator(tmp);
+    checkFlag = false;
+
+    let result = eval(tmp);
+    setOutput(result);
+  } catch(e) {
+    console.log(e);
+    setOutput('');
+  }
+}
+
+
+function checkVoiceInput(input) {
+  let divide = document.getElementById('/');
+  let mult = document.getElementById('*');
+  
+  for (let i = 0; i < input.length; i++) {
+    console.log('1');
+    if (input[i] === divide.id) {
+      input = input.replace('/', divide.innerHTML);
+    }
+    if (input[i] === 'd') {
+      input = input.replace(/d/g, '');
+      console.log(input[i]);
+      break;
+    }
+    if (input[i] === mult.id) {
+      input = input.replace('*', mult.innerHTML);
+      }
+    }
+  return input;
+  
+}
