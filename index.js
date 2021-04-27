@@ -37,12 +37,12 @@ function chooseOperator() {
             tmp  = checkOperator(tmp);
             if (checkFlag) {
               output = eval(tmp);
-              setOutput(output);
+              setOutput(output.toFixed(8));
               checkFlag = false;
             } else {
               output = eval(history);
               setHistory(history);
-              setOutput(output);
+              setOutput(output.toFixed(8));
             }
             
           }
@@ -53,7 +53,7 @@ function chooseOperator() {
           tmp  = checkOperator(tmp);
           output = eval(tmp);
           setHistory(history);
-          setOutput(output);
+          setOutput(output.toFixed(8));
         }
         if (history === '') {
           setOutput('');
@@ -87,6 +87,7 @@ function chooseOperator() {
           } 
           if (this.id !== '=') {
             if (equalFlag === false) {
+              console.log('1111');
               let hist = document.getElementById('history-value');
               hist.classList.toggle('history');
               let out = document.getElementById('output-value');
@@ -131,12 +132,12 @@ function chooseNumber() {
       if (checkFlag) {
         output = eval(tmp);
         setHistory(history);
-        setOutput(output);
+        setOutput(output.toFixed(8));
         checkFlag = false;
       } else {
         output = eval(history);
         setHistory(history);
-        setOutput(output);
+        setOutput(output.toFixed(8));
       }
     }); 
   }   
@@ -239,7 +240,7 @@ function evaluate(input) {
     checkFlag = false;
 
     let result = eval(tmp);
-    setOutput(result);
+    setOutput(result.toFixed(8));
   } catch(e) {
     console.log(e);
     setOutput('');
