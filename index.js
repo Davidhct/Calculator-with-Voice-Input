@@ -65,6 +65,9 @@ function chooseOperator() {
               let out = document.getElementById('output-value');
               out.classList.toggle('output');
               equalFlag = true;
+              setHistory('');
+              setOutput('');
+              history = getHistory(history);
         }     
         let bracket = BalanceBrackets(history);
         history = history.concat(bracket);
@@ -132,7 +135,7 @@ function chooseOperator() {
               }
             } 
               
-            if (this.id === '+' || this.id === '-') {
+            if (this.id === '+' || this.id === '-' || this.id === '.') {
               history = history.concat(this.id);
               setHistory(history);
             } 
@@ -352,7 +355,10 @@ function BalanceBrackets(history) {
         return '(';
       }  
     } else if (!isNaN(history[history.length - 1])) {
-      if (checkBracket === 1) {
+      if (checkBracket === 0) {
+        checkBracket++;
+        return '*(';
+      } else if (checkBracket === 1) {
         checkBracket--;
         balanceFlag = true;
         return ')';
