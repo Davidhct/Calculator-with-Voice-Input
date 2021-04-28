@@ -1,6 +1,11 @@
+
+
+
 let subFlag = true;
 let equalFlag = true;
 let checkFlag = false;
+let micFlag = false;
+
 onload = function run() {
   chooseOperator();
   chooseNumber();
@@ -35,15 +40,7 @@ function chooseOperator() {
           if (!isNaN(history[history.length - 1])) {
             let tmp = history;
             tmp  = checkOperator(tmp);
-            if (checkFlag) {
-              output = eval(tmp);
-              setOutput(output.toFixed(8));
-              checkFlag = false;
-            } else {
-              output = eval(history);
-              setHistory(history);
-              setOutput(output.toFixed(8));
-            }
+            evaluate(tmp);
             
           }
         } 
@@ -51,9 +48,8 @@ function chooseOperator() {
           let tmp = history;
           tmp = tmp.substr(0,tmp.length - 1);
           tmp  = checkOperator(tmp);
-          output = eval(tmp);
-          setHistory(history);
-          setOutput(output.toFixed(8));
+          evaluate(tmp);
+          
         }
         if (history === '') {
           setOutput('');
@@ -123,22 +119,33 @@ function chooseNumber() {
   for (let i = 0; i < numbers.length; i++ ) {
     numbers[i].addEventListener('click', function() {
       let history = getHistory();
-      let output = getOutput();
+      
+      
 
       history  = history.concat(this.id);
       let tmp = history;
       tmp  = checkOperator(tmp);
-          
-      if (checkFlag) {
-        output = eval(tmp);
+      evaluate(tmp); 
+      if (equalFlag === false) {
+        
+        console.log('1111');
+        let hist = document.getElementById('history-value');
+        hist.classList.toggle('history');
+        let out = document.getElementById('output-value');
+        out.classList.toggle('output');
+              
+        setHistory('');
+        history = getHistory();  
+        history = history.concat(this.id);  
+        tmp = history; 
+        setOutput('');
         setHistory(history);
-        setOutput(output.toFixed(8));
-        checkFlag = false;
-      } else {
-        output = eval(history);
-        setHistory(history);
-        setOutput(output.toFixed(8));
+        setOutput(history);
+            
+        equalFlag = true;
       }
+      
+      
     }); 
   }   
 }
@@ -213,42 +220,66 @@ function microphone() {
         'multiplied': '*',
         'divide': '/',
         'divided': '/',
-        'reminder': '%'
+        'reminder': '%',
+        'mode': '%',
+        'mod': '%',
+        'modulo': '%'
       }
       recognition.onresult = function(e) {
         let input = e.results[0][0].transcript;
 
         for (prop in operations) 
           input = input.replace(prop, operations[prop]);
-
-        // setHistory(input);
+        let tmp = checkInput(input); 
+        setHistory(tmp);
         setTimeout(function() {
-          evaluate(input);
+          micFlag = true;
+          evaluate(tmp);
         }, 2000);
         mic.classList.remove('record');
       }
   });
 }
 
-function evaluate(input) {
+function evaluate(tmp) {
+  let output = getOutput();
+  let history = getHistory();
+  
+    if (micFlag) {
+      try {
+      console.log('mic ' + tmp);
+      tmp = checkOperator(tmp);
+      let result = eval(tmp);
+      setOutput(result);
+      micFlag = false;
 
-  try {
-    let tmp = checkVoiceInput(input);
-    console.log(tmp);
-    setHistory(tmp)
-    tmp = checkOperator(tmp);
-    checkFlag = false;
+      } catch(e) {
+      console.log(e);
+      setOutput('');
+      }
+    } else if (checkFlag) {
+      console.log('checkFlag' + tmp);
+        output = eval(tmp);
+        console.log(history);
+        history = checkInput(tmp);
+        setHistory(history);
+        setOutput(output);
+        checkFlag = false;
+    } else {
+      
+      console.log('else' + tmp);
+      output = eval(tmp);
+      history = checkInput(tmp);
 
-    let result = eval(tmp);
-    setOutput(result.toFixed(8));
-  } catch(e) {
-    console.log(e);
-    setOutput('');
-  }
+      setHistory(history);
+      setOutput(output);
+    }
+    
+  
 }
 
 
-function checkVoiceInput(input) {
+function checkInput(input) {
   let divide = document.getElementById('/');
   let mult = document.getElementById('*');
   
@@ -268,4 +299,91 @@ function checkVoiceInput(input) {
     }
   return input;
   
+}
+
+function BalanceBrackets(hist) {
+  balanceFlag = false;
+  
+  let validation = false;
+  console.log(hist);
+  validation = checkBrackts(hist);
+  let history = getHistory();
+  console.log(history);
+  if (history === '') {
+    openBracket++;
+    return '(';
+  } else if (history !== '' && validation === true) {
+    if (isNaN(history[history.length - 1])) {
+      
+      if (history[history.length - 1] === '(') {
+        openBracket++;
+        return '(';
+      } else if (history[history.length - 1] === ')') {
+        if (openBracket - closeBracket === 0) {
+          openBracket++;
+          return '*(';
+        } else if (openBracket - closeBracket === 1) {
+          closeBracket++;
+          balanceFlag = true;
+          return ')';
+        }
+        closeBracket++;
+        return ')';
+      } else if (history[history.length - 1] === '*' || history[history.length - 1] === '/' || history[history.length - 1] === '+' 
+        || history[history.length - 1] === '-' || history[history.length - 1] === '%') {
+          openBracket++;
+          return '(';
+      }  
+    } else if (!isNaN(history[history.length - 1])) {
+      if (openBracket - closeBracket === 0) {
+        openBracket++;
+        return '*(';
+      } else if (openBracket - closeBracket === 1) {
+        closeBracket++;
+        balanceFlag = true;
+        return ')';
+      } else {
+        closeBracket++;
+        return ')';
+      }
+    } 
+    
+  }
+}
+
+function checkBrackts(history) {
+  let divide = document.getElementById('/');
+  let mult = document.getElementById('*');
+  for (let i = 0; i < history.length; i++) {
+    
+    if (history[i] === '(' && history[i + 1] === mult.innerHTML) {
+
+        history = history.replace(mult.innerHTML, '');
+        setHistory(history);
+        console.log(getHistory());
+        return true;
+    }
+    if (history[i] === '(' && history[i + 1] === divide.innerHTML) {
+      history = history.replace(divide.innerHTML, '');
+      setHistory(history);
+      return true;
+    } 
+    if (history[i] === '(' && history[i + 1] === '*') {
+      history = history.replace('*', '');
+      history = history.concat(')');
+      closeBracket++;
+      setHistory(history);
+      
+      
+    }
+    if (history[i] === '(' && history[i + 1] === '/') {
+      history = history.replace('/', '');
+      history = history.concat(')');
+      closeBracket++;
+      setHistory(history);
+    
+    
+    }
+    return true;
+  }
 }
