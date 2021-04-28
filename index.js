@@ -267,6 +267,7 @@ function microphone() {
           micFlag = true;
           evaluate(tmp);
         }, 2000);
+        recognition.stop();
         mic.classList.remove('record');
       }
   });
@@ -284,8 +285,11 @@ function evaluate(tmp) {
         micFlag = false;
 
       } catch(e) {
-        console.log(e);
+        setHistory('');
         setOutput('');
+        alert('Incorrect expression: ');
+        
+        
       }
     } else if (checkFlag && balanceFlag) {
       output = eval(tmp);
