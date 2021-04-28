@@ -234,13 +234,48 @@ button:nth-child(20) {
 
 @media only screen and (max-width: 648px) {
   body {
-    width: none;
+    background: none;
   }
   #container {
-    width: 320px;
-    padding: 0;
-    background-image: url(./images/background.jpg);
-    background-repeat: no-repeat;
+    /* text-align: center; */
+    /* background: none; */
+    /* background-size: 100%; */
+    width: 100%;
+    height: 100%;
+    /* padding: 0; */
+    /* background-image: url(./images/background.jpg); */
+    /* background-repeat: no-repeat; */
+    /* border-radius: 10px; */
+    display: flex;
+    margin: 0 auto;
+    /* padding: 0; */
+  }
+  #calculator {
+    width: 435px;
+    height: 725px;
+    /* background-color: rgba(196, 187, 187, 0.7); */
+    margin: 0px auto;
+    /* position: relative; */
     border-radius: 10px;
+    box-shadow: 0 10px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 90%);
+    text-align: -webkit-center;
+  }
+  #keyboard {
+    width: 100%;
+    height: 79%;
+  }
+  .operator,
+  .number {
+    width: 78px;
+    height: 74px;
+    margin: 12px;
+    margin-bottom: 40px;
+    /* margin-top: 20px; */
+    border-radius: 50%;
+    border-width: 0;
+    font-weight: bold;
+    font-size: 20px;
+    outline: none;
+    cursor: pointer;
   }
 }
