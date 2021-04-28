@@ -10,11 +10,13 @@ body {
 }
 
 #container {
-  width: 1000px;
-  height: 550px;
-  background-image: url("./images/background.jpg");
+  width: 50%;
+  padding-top: 11px;
+  padding-bottom: 11px;
+  background-image: url(./images/background.jpg);
   background-repeat: no-repeat;
   margin: 80px auto;
+  border-radius: 10px;
 }
 
 #calculator {
@@ -22,7 +24,6 @@ body {
   height: 530px;
   background-color: rgba(196, 187, 187, 0.7);
   margin: 0 auto;
-  top: 10px;
   position: relative;
   border-radius: 10px;
   box-shadow: 0 10px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.9);
@@ -228,5 +229,18 @@ button:nth-child(20) {
   /* Hide scrollbar for IE, Edge and Firefox */
   #output-text {
     -ms-overflow-style: none; /* IE and Edge */
+  }
+}
+
+@media only screen and (max-width: 648px) {
+  body {
+    width: none;
+  }
+  #container {
+    width: 320px;
+    padding: 0;
+    background-image: url(./images/background.jpg);
+    background-repeat: no-repeat;
+    border-radius: 10px;
   }
 }
