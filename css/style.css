@@ -25,7 +25,7 @@ body {
   margin: 0 auto;
   position: relative;
   border-radius: 10px;
-  box-shadow: 0 10px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.9);
+  box-shadow: 0 10px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 90%);
 }
 
 #result {
@@ -82,7 +82,6 @@ body {
   width: 30px;
   position: absolute;
   background: rgb(75, 165, 230);
-  /* background-image: url("./images/micro.png"); */
   background-size: 100% 100%;
   border-radius: 50%;
   margin: 20px;
@@ -232,29 +231,16 @@ button:nth-child(20) {
 }
 
 @media only screen and (max-width: 648px) {
-  body {
-    background: none;
-  }
   #container {
-    /* text-align: center; */
-    /* background: none; */
-    /* background-size: 100%; */
-    width: 100%;
-    height: 100%;
-    /* padding: 0; */
-    /* background-image: url(./images/background.jpg); */
-    /* background-repeat: no-repeat; */
-    /* border-radius: 10px; */
+    width: 408px;
     display: flex;
-    margin: 0 auto;
-    /* padding: 0; */
+    margin: 50%;
+    padding: 0;
   }
   #calculator {
     width: 435px;
     height: 725px;
-    /* background-color: rgba(196, 187, 187, 0.7); */
     margin: 0px auto;
-    /* position: relative; */
     border-radius: 10px;
     box-shadow: 0 10px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 90%);
     text-align: -webkit-center;
@@ -269,12 +255,5 @@ button:nth-child(20) {
     height: 74px;
     margin: 12px;
     margin-bottom: 40px;
-    /* margin-top: 20px; */
-    border-radius: 50%;
-    border-width: 0;
-    font-weight: bold;
-    font-size: 20px;
-    outline: none;
-    cursor: pointer;
   }
 }
