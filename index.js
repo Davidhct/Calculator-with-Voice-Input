@@ -5,7 +5,9 @@ let subFlag = true;
 let equalFlag = true;
 let checkFlag = false;
 let micFlag = false;
-
+let balanceFlag = true;
+let checkBracket = 0;
+// let closeBracket = 0;
 onload = function run() {
   chooseOperator();
   chooseNumber();
@@ -22,7 +24,6 @@ function chooseOperator() {
       let history = getHistory(); 
       let output = getOutput();
       if (this.id === 'AC') {
-        console.log(this.id);
         setHistory('');
         setOutput('');
         subFlag = true;
@@ -34,14 +35,15 @@ function chooseOperator() {
           setHistory(history);
         }
         else if (history) {
-          history = history.substr(0,history.length - 1);
-          setHistory(history);
-
           if (!isNaN(history[history.length - 1])) {
+            history = history.substr(0,history.length - 1);
+            setHistory(history);
+          } else if (!isNaN(history[history.length - 1])) {
+            history = history.substr(0,history.length - 1);
+            setHistory(history);
             let tmp = history;
             tmp  = checkOperator(tmp);
             evaluate(tmp);
-            
           }
         } 
         if (isNaN(history[history.length - 1])) {
@@ -55,7 +57,24 @@ function chooseOperator() {
           setOutput('');
           subFlag = true;
         }
-      }else if (history === '') {
+      } else if (this.id === '()') {
+        if (equalFlag === false) {
+  
+              let hist = document.getElementById('history-value');
+              hist.classList.toggle('history');
+              let out = document.getElementById('output-value');
+              out.classList.toggle('output');
+              equalFlag = true;
+        }     
+        let bracket = BalanceBrackets(history);
+        history = history.concat(bracket);
+        tmp = history;
+        history = checkInput(history);
+        setHistory(history);
+
+        tmp  = checkOperator(tmp);
+        evaluate(tmp);
+      } else if (history === '') {
   
         if (this.id === '-' && subFlag === true) {
           history = history.concat(this.id);
@@ -66,12 +85,13 @@ function chooseOperator() {
           history = history.concat('0.');
           setHistory(history);
         }
-      } 
-      else {
+      } else {
         if (isNaN(history[history.length - 1])) {
-            history = history.substr(0, history.length - 1);
-            console.log("0");
+          if (!(history[history.length - 1] === '(' || history[history.length - 1] === ')')) {
+            history = history.substr(0,history.length - 1);
+            setHistory(history);
           }
+        }
         if (history !== '') {
           if (this.id === '=' && equalFlag === true) {
             let hist = document.getElementById('history-value');
@@ -83,7 +103,7 @@ function chooseOperator() {
           } 
           if (this.id !== '=') {
             if (equalFlag === false) {
-              console.log('1111');
+  
               let hist = document.getElementById('history-value');
               hist.classList.toggle('history');
               let out = document.getElementById('output-value');
@@ -99,13 +119,20 @@ function chooseOperator() {
               equalFlag = true;
             }
             
-            if (this.id === '/') {
+            if (history[history.length - 1] !== '(') {
+              if (this.id === '/') {
               history = history.concat(this.innerHTML);
               setHistory(history);
-            } else if (this.id === '*') {
+              } else if (this.id === '*') {
               history = history.concat(this.innerHTML);
               setHistory(history);
-            } else {
+              } else if (this.id === '%') {
+                history = history.concat(this.innerHTML);
+                setHistory(history);
+              }
+            } 
+              
+            if (this.id === '+' || this.id === '-') {
               history = history.concat(this.id);
               setHistory(history);
             } 
@@ -128,7 +155,6 @@ function chooseNumber() {
       evaluate(tmp); 
       if (equalFlag === false) {
         
-        console.log('1111');
         let hist = document.getElementById('history-value');
         hist.classList.toggle('history');
         let out = document.getElementById('output-value');
@@ -188,19 +214,19 @@ function setOutput(num) {
   document.getElementById('output-value').innerHTML = num;
 }
 
-function getFormattedNumber(num) {
-  if (num === '-') {
-    return '';
-  }
+// function getFormattedNumber(num) {
+//   if (num === '-') {
+//     return '';
+//   }
 
-  let n = Number(num);
-  let val = n.toLocaleString("en");
-  return val;
-}
+//   let n = Number(num);
+//   let val = n.toLocaleString("en");
+//   return val;
+// }
 
-function reverseNumberFormat(num) {
-  return Number(num.replace(/,/g, ''));
-}
+// function reverseNumberFormat(num) {
+//   return Number(num.replace(/,/g, ''));
+// }
 
 
 function microphone() {
@@ -223,7 +249,9 @@ function microphone() {
         'reminder': '%',
         'mode': '%',
         'mod': '%',
-        'modulo': '%'
+        'modulo': '%',
+        'Open Bracket': '(',
+        'close bracket': ')'
       }
       recognition.onresult = function(e) {
         let input = e.results[0][0].transcript;
@@ -247,30 +275,28 @@ function evaluate(tmp) {
   
     if (micFlag) {
       try {
-      console.log('mic ' + tmp);
-      tmp = checkOperator(tmp);
-      let result = eval(tmp);
-      setOutput(result);
-      micFlag = false;
+        tmp = checkOperator(tmp);
+        let result = eval(tmp);
+        setOutput(result);
+        micFlag = false;
 
       } catch(e) {
-      console.log(e);
-      setOutput('');
+        console.log(e);
+        setOutput('');
       }
-    } else if (checkFlag) {
-      console.log('checkFlag' + tmp);
-        output = eval(tmp);
-        console.log(history);
-        history = checkInput(tmp);
-        setHistory(history);
-        setOutput(output);
-        checkFlag = false;
-    } else {
-      
-      console.log('else' + tmp);
+    } else if (checkFlag && balanceFlag) {
       output = eval(tmp);
       history = checkInput(tmp);
-
+      setHistory(history);
+      setOutput(output);
+      checkFlag = false;
+    } else {
+      if (balanceFlag) {
+        
+        output = eval(tmp);
+        history = checkInput(tmp);
+      } 
+      history = checkInput(tmp);
       setHistory(history);
       setOutput(output);
     }
@@ -284,13 +310,11 @@ function checkInput(input) {
   let mult = document.getElementById('*');
   
   for (let i = 0; i < input.length; i++) {
-    console.log('1');
     if (input[i] === divide.id) {
       input = input.replace('/', divide.innerHTML);
     }
     if (input[i] === 'd') {
       input = input.replace(/d/g, '');
-      console.log(input[i]);
       break;
     }
     if (input[i] === mult.id) {
@@ -301,89 +325,41 @@ function checkInput(input) {
   
 }
 
-function BalanceBrackets(hist) {
+function BalanceBrackets(history) {
   balanceFlag = false;
-  
-  let validation = false;
-  console.log(hist);
-  validation = checkBrackts(hist);
-  let history = getHistory();
-  console.log(history);
+
   if (history === '') {
-    openBracket++;
+    checkBracket++;
     return '(';
-  } else if (history !== '' && validation === true) {
+  } else if (history !== '') {
     if (isNaN(history[history.length - 1])) {
-      
       if (history[history.length - 1] === '(') {
-        openBracket++;
+        checkBracket++;
         return '(';
       } else if (history[history.length - 1] === ')') {
-        if (openBracket - closeBracket === 0) {
-          openBracket++;
+        if (checkBracket === 0) {
+          checkBracket++;
           return '*(';
-        } else if (openBracket - closeBracket === 1) {
-          closeBracket++;
+        } else if (checkBracket === 1) {
+          checkBracket--;
           balanceFlag = true;
           return ')';
         }
-        closeBracket++;
+        checkBracket--;
         return ')';
-      } else if (history[history.length - 1] === '*' || history[history.length - 1] === '/' || history[history.length - 1] === '+' 
-        || history[history.length - 1] === '-' || history[history.length - 1] === '%') {
-          openBracket++;
-          return '(';
+      } else {
+        checkBracket++;
+        return '(';
       }  
     } else if (!isNaN(history[history.length - 1])) {
-      if (openBracket - closeBracket === 0) {
-        openBracket++;
-        return '*(';
-      } else if (openBracket - closeBracket === 1) {
-        closeBracket++;
+      if (checkBracket === 1) {
+        checkBracket--;
         balanceFlag = true;
         return ')';
       } else {
-        closeBracket++;
+        checkBracket--;
         return ')';
       }
     } 
-    
-  }
-}
-
-function checkBrackts(history) {
-  let divide = document.getElementById('/');
-  let mult = document.getElementById('*');
-  for (let i = 0; i < history.length; i++) {
-    
-    if (history[i] === '(' && history[i + 1] === mult.innerHTML) {
-
-        history = history.replace(mult.innerHTML, '');
-        setHistory(history);
-        console.log(getHistory());
-        return true;
-    }
-    if (history[i] === '(' && history[i + 1] === divide.innerHTML) {
-      history = history.replace(divide.innerHTML, '');
-      setHistory(history);
-      return true;
-    } 
-    if (history[i] === '(' && history[i + 1] === '*') {
-      history = history.replace('*', '');
-      history = history.concat(')');
-      closeBracket++;
-      setHistory(history);
-      
-      
-    }
-    if (history[i] === '(' && history[i + 1] === '/') {
-      history = history.replace('/', '');
-      history = history.concat(')');
-      closeBracket++;
-      setHistory(history);
-    
-    
-    }
-    return true;
   }
 }
