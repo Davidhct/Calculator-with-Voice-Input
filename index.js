@@ -1,6 +1,5 @@
 
 
-
 let subFlag = true;
 let equalFlag = true;
 let checkFlag = false;
