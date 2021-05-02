@@ -287,8 +287,8 @@ button:nth-child(20) {
   }
   .operator,
   .number {
-    width: 18%;
-    height: 58px;
+    width: 18vw;
+    height: 9vh;
     margin: 3%;
   }
 }
