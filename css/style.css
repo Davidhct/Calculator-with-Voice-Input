@@ -172,12 +172,16 @@ body {
 .operator:active {
   font-size: 15px;
 }
+.operator > img:active {
+  width: 5vw;
+}
 button:nth-child(1) {
   background: rgba(131, 138, 137, 0.4);
 }
 button:nth-child(2) {
   background: rgba(131, 138, 137, 0.4);
 }
+
 button:nth-child(3) {
   background: rgba(221, 94, 100, 0.4);
 }
@@ -254,34 +258,4 @@ button:nth-child(20) {
     border-radius: 10px;
     text-align: -webkit-center;
   }
-  #result {
-    height: 24vh;
-  }
-  #output-text {
-    width: 100vw;
-    background-color: rgba(197, 187, 187, 0.4);
-  }
 
-  /* Hide scrollbar for Chrome, Safari and Opera */
-  #output-text::-webkit-scrollbar {
-    display: none;
-  }
-  /* Hide scrollbar for IE, Edge and Firefox */
-  #output-text {
-    -ms-overflow-style: none; /* IE and Edge */
-  }
-  #microphone {
-    top: 15%;
-  }
-
-  #keyboard {
-    width: 100%;
-    height: 60vh;
-  }
-  .operator,
-  .number {
-    width: 18vw;
-    height: 9vh;
-    margin: 3%;
-  }
-}
