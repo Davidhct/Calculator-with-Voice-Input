@@ -172,12 +172,16 @@ body {
 .operator:active {
   font-size: 15px;
 }
+.operator > img:active {
+  width: 5vw;
+}
 button:nth-child(1) {
   background: rgba(131, 138, 137, 0.4);
 }
 button:nth-child(2) {
   background: rgba(131, 138, 137, 0.4);
 }
+
 button:nth-child(3) {
   background: rgba(221, 94, 100, 0.4);
 }
@@ -255,7 +259,7 @@ button:nth-child(20) {
     text-align: -webkit-center;
   }
   #result {
-    height: 30vh;
+    height: 21vh;
   }
   #output-text {
     width: 100vw;
@@ -272,23 +276,19 @@ button:nth-child(20) {
   }
   #microphone {
     top: 15%;
-    /* right: 2%;
-    height: 41px;
-    width: 41px; */
   }
-  #microphone > img {
-    /* height: 37px;
-    width: 39px;
-    position: absolute; */
-  }
+
   #keyboard {
     width: 100%;
-    height: 70vh;
+    height: 60vh;
   }
   .operator,
   .number {
-    width: 18%;
-    height: 58px;
+    width: 18vw;
+    height: 9vh;
     margin: 3%;
+  }
+  .operator > img {
+    width: 7vw;
   }
 }
