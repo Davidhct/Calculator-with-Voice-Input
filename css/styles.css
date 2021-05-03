@@ -262,7 +262,8 @@ button:nth-child(20) {
     height: 26vh;
   }
   #output-text {
-    width: 100vw;
+    width: 80vw;
+    margin-right: 20%;
     background-color: rgba(197, 187, 187, 0.4);
   }
 
@@ -275,7 +276,8 @@ button:nth-child(20) {
     -ms-overflow-style: none; /* IE and Edge */
   }
   #microphone {
-    top: 15%;
+    margin-right: 3%;
+    top: 4%;
   }
 
   #keyboard {
@@ -284,11 +286,36 @@ button:nth-child(20) {
   }
   .operator,
   .number {
-    width: 18vw;
-    height: 9vh;
+    width: 67px;
+    height: 67px;
     margin: 3%;
   }
   .operator > img {
     width: 7vw;
+  }
+}
+
+@media only screen and (max-width: 352px) {
+  .operator,
+  .number {
+    width: 67px;
+    height: 67px;
+    margin: 3%;
+  }
+}
+@media only screen and (max-width: 320px) {
+  .operator,
+  .number {
+    width: 56px;
+    height: 56px;
+    margin: 3%;
+  }
+}
+@media only screen and (max-width: 280px) {
+  .operator,
+  .number {
+    width: 53px;
+    height: 53px;
+    margin: 3%;
   }
 }
